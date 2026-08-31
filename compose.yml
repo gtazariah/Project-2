@@ -1,0 +1,9 @@
+services:
+  trend-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: trend-app
+    ports:
+      - "3000:80"
+    restart: unless-stopped
