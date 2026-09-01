@@ -88,5 +88,33 @@ stages {
         }
     }
 }
+post {
+    success {
+        echo """ 
+        ===================================== 
+        PIPELINE COMPLETED SUCCESSFULLY 
+        ===================================== 
+        Image: ${env.IMAGE_NAME}:${env.IMAGE_TAG} 
+        Cluster: ${env.EKS_CLUSTER} 
+        Region: ${env.AWS_REGION} 
+        """
+    }
 
+    failure {
+        echo """ 
+        ===================================== 
+        PIPELINE FAILED 
+        ===================================== 
+        Image: ${env.IMAGE_NAME}:${env.IMAGE_TAG} 
+        Cluster: ${env.EKS_CLUSTER} 
+        Region: ${env.AWS_REGION} 
+        """
+    }
+    always {
+        sh ''' 
+            echo "Cleaning unused Docker images..." 
+            docker image prune -f || true 
+            '''
+    }
+}
 }
