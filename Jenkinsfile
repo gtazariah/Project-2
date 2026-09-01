@@ -94,8 +94,8 @@ post {
         ===================================== 
         PIPELINE COMPLETED SUCCESSFULLY 
         ===================================== 
-        Image: ${IMAGE_REPOSITORY}:${IMAGE_TAG} 
-        Cluster: ${EKS_CLUSTER} 
+        Image: ${env.IMAGE_REPOSITORY}:${env.IMAGE_TAG} 
+        Cluster: ${env.EKS_CLUSTER} 
         Region: ${AWS_REGION} 
         """
     }
@@ -105,9 +105,9 @@ post {
         ===================================== 
         PIPELINE FAILED 
         ===================================== 
-        Image: ${IMAGE_REPOSITORY}:${IMAGE_TAG} 
-        Cluster: ${EKS_CLUSTER} 
-        Region: ${AWS_REGION} 
+        Image: ${env.IMAGE_REPOSITORY}:${env.IMAGE_TAG} 
+        Cluster: ${env.EKS_CLUSTER} 
+        Region: ${env.AWS_REGION} 
         """
     }
     always {
