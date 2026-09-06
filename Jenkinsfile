@@ -112,8 +112,7 @@ post {
     }
     always {
 
-        emailext( to: 'azariah.gt@gmail.com', subject: "Jenkins Test - Build #${env.BUILD_NUMBER}", body: """ Jenkins email notification test. Job: ${env.JOB_NAME} Build: #${env.BUILD_NUMBER} Status: ${currentBuild.currentResult} Build URL: ${env.BUILD_URL} """ )
-        
+        emailext( to: 'azariah.gt@gmail.com', from: 'azariah.gt@gmail.com', subject: "Jenkins Test - Build #${env.BUILD_NUMBER}", body: """ Jenkins email notification test. Job: ${env.JOB_NAME} Build: #${env.BUILD_NUMBER} Status: ${currentBuild.currentResult} Build URL: ${env.BUILD_URL} """ )
         sh ''' 
             echo "Cleaning unused Docker images..." 
             docker image prune -f || true 
