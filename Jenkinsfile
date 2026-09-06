@@ -111,6 +111,9 @@ post {
         """
     }
     always {
+
+        emailext( to: 'azariah.gt@gmail.com', subject: "Jenkins Build ${env.JOB_NAME} #${env.BUILD_NUMBER} - ${currentBuild.currentResult}", body: """ Hello, Jenkins job execution completed. Job Name: ${env.JOB_NAME} Build Number: #${env.BUILD_NUMBER} Build Status: ${currentBuild.currentResult} Branch: ${env.GIT_BRANCH} Docker Image: ${env.IMAGE_REPOSITORY}:${env.IMAGE_TAG} EKS Cluster: ${env.EKS_CLUSTER} AWS Region: ${env.AWS_REGION} Build URL: ${env.BUILD_URL} Regards, Jenkins CI/CD """ )
+        
         sh ''' 
             echo "Cleaning unused Docker images..." 
             docker image prune -f || true 
