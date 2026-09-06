@@ -112,7 +112,7 @@ post {
     }
     always {
 
-        emailext( to: 'azariah.gt@gmail.com', subject: "Jenkins Build ${env.JOB_NAME} #${env.BUILD_NUMBER} - ${currentBuild.currentResult}", body: """ Hello, Jenkins job execution completed. Job Name: ${env.JOB_NAME} Build Number: #${env.BUILD_NUMBER} Build Status: ${currentBuild.currentResult} Branch: ${env.GIT_BRANCH} Docker Image: ${env.IMAGE_REPOSITORY}:${env.IMAGE_TAG} EKS Cluster: ${env.EKS_CLUSTER} AWS Region: ${env.AWS_REGION} Build URL: ${env.BUILD_URL} Regards, Jenkins CI/CD """ )
+        emailext( to: 'azariah.gt@gmail.com', subject: "Jenkins Test - Build #${env.BUILD_NUMBER}", body: """ Jenkins email notification test. Job: ${env.JOB_NAME} Build: #${env.BUILD_NUMBER} Status: ${currentBuild.currentResult} Build URL: ${env.BUILD_URL} """ )
         
         sh ''' 
             echo "Cleaning unused Docker images..." 
