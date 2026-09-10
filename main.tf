@@ -170,22 +170,22 @@ resource "aws_iam_instance_profile" "jenkins" {
 
 #create an access entry for EC2 IAM role to access EKS cluster
 resource "aws_eks_access_entry" "jenkins_access" {
-  cluster_name = "trend-eks-cluster"
+  cluster_name  = "trend-eks-cluster"
   principal_arn = aws_iam_role.jenkins.arn
-  type         = "STANDARD"
+  type          = "STANDARD"
 }
 
 #associate awsEksadmin policy to the jenkins Access entry
 resource "aws_eks_access_policy_association" "jenkins_admin" {
-  cluster_name = "trend-eks-cluster"
-  policy_arn   = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSAdminPolicy"
+  cluster_name  = "trend-eks-cluster"
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
   principal_arn = aws_iam_role.jenkins.arn
 
   access_scope {
     type = "cluster"
   }
 
-  depends_on = [ aws_eks_access_entry.jenkins_access ]
+  depends_on = [aws_eks_access_entry.jenkins_access]
 
 }
 
@@ -200,29 +200,39 @@ resource "aws_instance" "jenkins" {
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.jenkins.name
 
+  root_block_device {
+    volume_size = 20
+    volume_type = "gp3"
+  }
+  user_data_replace_on_change = true
+
+  depends_on = [
+    aws_route_table_association.public
+  ]
+
   user_data = <<-EOF
 #!/bin/bash
 
-set -eux
+set -euxo pipefail
 
-# -----------------------------
-# Update Ubuntu
-# -----------------------------
+# Save user-data output for troubleshooting
+exec > >(tee /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&1
 
+export DEBIAN_FRONTEND=noninteractive
+
+echo "Starting EC2 setup..."
+
+# Update package information
 apt-get update -y
-apt-get upgrade -y
-sudo apt-get install -y unzip
-# -----------------------------
-# Install required packages
-# -----------------------------
 
+# Install required packages
 apt-get install -y \
   ca-certificates \
   curl \
   wget \
+  unzip \
   fontconfig \
   openjdk-21-jre
-
 # -----------------------------
 # Install Docker
 # -----------------------------
